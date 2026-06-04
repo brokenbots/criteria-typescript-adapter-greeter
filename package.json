@@ -3,14 +3,15 @@
   "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "build": "bun build --compile index.ts --outfile out/adapter",
-    "build:linux-x64": "bun build --compile --target=bun-linux-x64 index.ts --outfile out/adapter-linux-amd64",
-    "build:linux-arm64": "bun build --compile --target=bun-linux-arm64 index.ts --outfile out/adapter-linux-arm64",
-    "build:darwin-arm64": "bun build --compile --target=bun-darwin-arm64 index.ts --outfile out/adapter-darwin-arm64",
+    "build": "bun build --compile index.ts --outfile out/adapter && rm -rf proto && cp -R ../criteria-typescript-adapter-sdk/proto .",
+    "build:linux-x64": "bun build --compile --target=bun-linux-x64 index.ts --outfile out/adapter-linux-amd64 && rm -rf proto && cp -R ../criteria-typescript-adapter-sdk/proto .",
+    "build:linux-arm64": "bun build --compile --target=bun-linux-arm64 index.ts --outfile out/adapter-linux-arm64 && rm -rf proto && cp -R ../criteria-typescript-adapter-sdk/proto .",
+    "build:darwin-arm64": "bun build --compile --target=bun-darwin-arm64 index.ts --outfile out/adapter-darwin-arm64 && rm -rf proto && cp -R ../criteria-typescript-adapter-sdk/proto .",
+    "pretest": "mkdir -p out && bun run build",
     "test": "bun test",
-    "clean": "rm -rf out"
+    "clean": "rm -rf out proto"
   },
   "dependencies": {
-    "@criteria/adapter-sdk": "2.0.0-rc.1"
+    "@criteria/adapter-sdk": "file:../criteria-typescript-adapter-sdk"
   }
 }
