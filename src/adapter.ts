@@ -19,7 +19,7 @@ export const adapterConfig = {
   },
   output_schema: {
     fields: {
-      greeting: { type: "string", required: true, description: "The composed greeting" },
+      reason: { type: "string", required: true, description: "The composed greeting" },
     },
   },
   secrets: [],
