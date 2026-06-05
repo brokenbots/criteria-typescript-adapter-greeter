@@ -41,6 +41,13 @@ jobs:
         with:
           bun-version: latest
 
+      # The adapter consumes the SDK's compiled dist/, so build the SDK first.
+      - name: Build SDK
+        working-directory: criteria-typescript-adapter-sdk
+        run: |
+          bun install
+          bun run build
+
       - name: Build adapter binary
         working-directory: criteria-typescript-adapter-greeter
         run: |
