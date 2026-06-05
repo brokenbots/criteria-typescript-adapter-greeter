@@ -26,6 +26,7 @@ describe("greeter adapter", () => {
         allowedOutcomes: ["greeted"],
       });
       expect(result.outcome).toBe("greeted");
+      expect(result.reason).toBe("Hello, team!");
     } finally {
       await host.stop();
     }
@@ -41,6 +42,7 @@ describe("greeter adapter", () => {
         allowedOutcomes: ["greeted"],
       });
       expect(result.outcome).toBe("greeted");
+      expect(result.reason).toBe("Hi world.");
     } finally {
       await host.stop();
     }
@@ -56,6 +58,7 @@ describe("greeter adapter", () => {
         allowedOutcomes: ["greeted"],
       });
       expect(result.outcome).toBe("greeted");
+      expect(result.reason).toBe("Hello, world!");
     } finally {
       await host.stop();
     }
@@ -71,6 +74,7 @@ describe("greeter adapter", () => {
         allowedOutcomes: ["greeted"],
       });
       expect(result.outcome).toBe("greeted");
+      expect(result.reason).toBe("Hello, team!");
     } finally {
       await host.stop();
     }
