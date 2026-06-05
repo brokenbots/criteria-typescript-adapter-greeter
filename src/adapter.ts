@@ -2,7 +2,7 @@ import type { ExecuteRequest, Helpers } from "@criteria/adapter-sdk";
 
 export const adapterConfig = {
   name: "greeter",
-  version: "2.0.0",
+  version: "0.5.0",
   description: "Minimal hello-world adapter.",
   source_url: "https://github.com/criteria-adapters/greeter",
   capabilities: [],
