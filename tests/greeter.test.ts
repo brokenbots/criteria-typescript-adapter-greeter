@@ -36,7 +36,7 @@ describe("greeter adapter", () => {
     expect(exitCode).toBe(0);
     expect(stderr).toBe("");
     expect(stdout).toContain("name: greeter");
-    expect(stdout).toContain("version: 2.0.0");
+    expect(stdout).toContain("version: 0.5.0");
     expect(stdout).toContain("sdk_protocol_version: 2");
   });
 
