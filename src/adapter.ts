@@ -4,7 +4,7 @@ export const adapterConfig = {
   name: "greeter",
   version: "0.5.0",
   description: "Minimal hello-world adapter.",
-  source_url: "https://github.com/criteria-adapters/greeter",
+  source_url: "https://github.com/brokenbots/criteria-typescript-adapter-greeter",
   capabilities: [],
   platforms: ["linux/amd64", "linux/arm64", "darwin/arm64"],
   config_schema: {
