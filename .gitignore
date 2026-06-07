@@ -1,3 +1,5 @@
 node_modules/
 out/
 proto/
+artifact/
+package-lock.json

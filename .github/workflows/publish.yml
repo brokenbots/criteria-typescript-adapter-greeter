@@ -1,8 +1,10 @@
 name: Publish Adapter
 
-# Build the adapter (toolchain-specific), then publish the binary via the
-# reusable brokenbots/publish-adapter action. The SDK is consumed via a
-# file: path, so it is checked out as a sibling directory in the workspace.
+# Cross-compile the adapter for every supported platform, lay the binaries out
+# as bin/<os>/<arch>/<name>, and publish them as a single multi-platform, signed
+# OCI artifact via the reusable brokenbots/publish-adapter action. The SDK is a
+# file: dependency, checked out as a sibling and built first; the per-target
+# build scripts also vendor the SDK proto/ needed at compile time.
 
 on:
   push:
@@ -18,7 +20,10 @@ on:
 permissions:
   contents: read
   packages: write
-  id-token: write
+  id-token: write # cosign keyless signing
+
+env:
+  ADAPTER_NAME: criteria-adapter-greeter
 
 jobs:
   publish:
@@ -29,8 +34,6 @@ jobs:
         with:
           path: criteria-typescript-adapter-greeter
 
-      # The SDK is a file: dependency (bundled at compile time). Check it out as
-      # a sibling so `file:../criteria-typescript-adapter-sdk` resolves.
       - name: Checkout SDK (sibling)
         uses: actions/checkout@v4
         with:
@@ -41,18 +44,27 @@ jobs:
         with:
           bun-version: latest
 
-      # The adapter consumes the SDK's compiled dist/, so build the SDK first.
       - name: Build SDK
         working-directory: criteria-typescript-adapter-sdk
         run: |
           bun install
           bun run build
 
-      - name: Build adapter binary
+      - name: Cross-compile adapter binaries
         working-directory: criteria-typescript-adapter-greeter
+        # Use the per-target build scripts (they vendor the SDK proto/), then
+        # relocate the outputs into the bin/<os>/<arch>/<name> layout that
+        # `criteria adapter publish` scans for a multi-platform artifact.
         run: |
+          set -euo pipefail
           bun install
-          bun run build
+          bun run build:linux-x64
+          bun run build:linux-arm64
+          bun run build:darwin-arm64
+          mkdir -p artifact/bin/linux/amd64 artifact/bin/linux/arm64 artifact/bin/darwin/arm64
+          mv out/adapter-linux-amd64  "artifact/bin/linux/amd64/${ADAPTER_NAME}"
+          mv out/adapter-linux-arm64  "artifact/bin/linux/arm64/${ADAPTER_NAME}"
+          mv out/adapter-darwin-arm64 "artifact/bin/darwin/arm64/${ADAPTER_NAME}"
 
       - name: Resolve version
         id: ver
@@ -69,5 +81,6 @@ jobs:
       - name: Publish
         uses: brokenbots/publish-adapter@v0
         with:
-          binary: ${{ github.workspace }}/criteria-typescript-adapter-greeter/out/adapter
-          registry: ghcr.io/${{ github.repository_owner }}/criteria-adapter-greeter:${{ steps.ver.outputs.tag }}
+          # Directory containing the multi-platform bin/<os>/<arch>/ tree.
+          binary: ${{ github.workspace }}/criteria-typescript-adapter-greeter/artifact
+          registry: ghcr.io/${{ github.repository_owner }}/${{ env.ADAPTER_NAME }}:${{ steps.ver.outputs.tag }}

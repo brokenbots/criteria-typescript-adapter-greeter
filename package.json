@@ -9,7 +9,9 @@
     "build:darwin-arm64": "bun build --compile --target=bun-darwin-arm64 index.ts --outfile out/adapter-darwin-arm64 && rm -rf proto && cp -R ../criteria-typescript-adapter-sdk/proto .",
     "pretest": "mkdir -p out && bun run build",
     "test": "bun test",
-    "clean": "rm -rf out proto"
+    "clean": "rm -rf out proto",
+    "vuln-scan": "osv-scanner scan source --config=osv-scanner.toml -r .",
+    "deps:outdated": "bun outdated"
   },
   "dependencies": {
     "@criteria/adapter-sdk": "file:../criteria-typescript-adapter-sdk"
